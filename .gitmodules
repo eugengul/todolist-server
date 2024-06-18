@@ -1,0 +1,4 @@
+[submodule "todolist"]
+	path = client
+	url = git@github.com:eugengul/todolist.git
+	branch = server-integration
