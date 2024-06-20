@@ -25,20 +25,10 @@ const TaskSchema = new Schema({
     name: { type: String },
     priority: { type: Number },
     dueDate: { type: Date },
+    created: { type: Number },
     completed: { type: Boolean },
     lastUpdated: {type: Number },
 });
-
-// Middleware to remove tasks refs from user
-TaskSchema.pre('remove', function(next) {
-    const task = this;
-    User.updateMany(
-      { tasks: task._id },
-      { $pull: { tasks: task._id } },
-      { multi: true }
-    ).exec();
-    next();
-  });
 
 const Task = mongoose.model("Task", TaskSchema);
 
