@@ -4,6 +4,7 @@ import express from 'express';
 import passport from 'passport';
 import { ExtractJwt, Strategy } from "passport-jwt";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 
 import db from './db.js'
 import settings from './settings.js'
@@ -35,6 +36,15 @@ const generateToken = (user) => {
     return accessToken
 }
 
+const saveUser = (data) => {
+    // Hash password before save
+    return bcrypt.hash(data.password, 10)
+        .then(hashedPassword => {
+            data.password = hashedPassword;
+            return db.User.create(data)
+        })
+}
+
 authRouter.post("/signup", (request, response, next) => {
     const username = request.body['username'];
     const password = request.body['password'];
@@ -48,14 +58,13 @@ authRouter.post("/signup", (request, response, next) => {
         .then(user => {
             if (!user) {
                 // Create a new user if it does not exist
-                db.User.create(request.body).then(
-                    (user) => response.send(
-                        {
+                saveUser(request.body)
+                    .then(user => {
+                        response.send({
                             accessToken: generateToken(user),
                             user: user,
-                        }
-                    )
-                )
+                        });
+                    })
             } else {
                 // If the user exists, send an error message.
                 return response.status(400).json(
@@ -73,22 +82,26 @@ authRouter.post("/login", (request, response, next) => {
     const username = request.body.username;
     const password = request.body.password;
 
-    db.User.findOne({ username: username}).then(
+    db.User.findOne({ username: username }).then(
         (user) => {
-            if (!user || user.password !== password)
-                return response.status(400).json(
-                    { message: "Ungültiger Benutzername oder Passwort." });
-            else {
-                // Successful login
-                // Generate and return JWT Token
-                const accessToken = generateToken(user);
-                return response.json(
-                    {
-                        message: "user logged in",
-                        accessToken: accessToken,
-                        user: user
-                    });
-            }
+            // Compare hashed password
+            bcrypt.compare(password, user.password)
+                .then(passwordMatch => {
+                    if (!user || !passwordMatch)
+                        return response.status(400).json(
+                            { message: "Ungültiger Benutzername oder Passwort." });
+                    else {
+                        // Successful login
+                        // Generate and return JWT Token
+                        const accessToken = generateToken(user);
+                        return response.json(
+                            {
+                                message: "user logged in",
+                                accessToken: accessToken,
+                                user: user
+                            });
+                    }
+                })
         }).catch((err) => {
             console.warn(err);
             next(err);
