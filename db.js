@@ -27,6 +27,7 @@ const TaskSchema = new Schema({
     dueDate: { type: Date },
     created: { type: Number },
     completed: { type: Boolean },
+    deleted: {type: Boolean},
     lastUpdated: {type: Number },
 });
 
