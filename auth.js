@@ -82,6 +82,10 @@ authRouter.post("/login", (request, response, next) => {
     const username = request.body.username;
     const password = request.body.password;
 
+    if (!username || !password)
+        return response.status(400).json(
+            { message: "Füllen Sie alle Felder aus." });
+
     db.User.findOne({ username: username }).then(
         (user) => {
             // Compare hashed password
