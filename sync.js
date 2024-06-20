@@ -5,8 +5,9 @@ import db from './db.js';
 
 const saveTasks = (user, tasks) => {
     return Promise.all(tasks.map(task => {
-        // If task has id try to find it in db and update
-        if (task._id) {
+        // If task has id check that it belongs to this user
+        if (task._id && user.tasks.includes(task._id)) {
+            // And try to find this task in DB
             return db.Task.findById(task._id)
                 .then(taskInDB => {
                     // Save the version with the later `lastUpdated` field
