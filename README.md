@@ -7,25 +7,25 @@ This is a server for to-do list application with authorization and synchronizati
 1. Clone a repository with submodules.
 
     ```bash
-    $ git clone --recurse-submodules https://github.com/eugengul/todolist-server.git
+    git clone --recurse-submodules https://github.com/eugengul/todolist-server.git
     ```
 
 2. Change directory.
 
     ```bash
-    $ cd todolist-server
+    cd todolist-server
     ```
 
 2. Install dependencies.
 
     ```bash
-    $ npm install
+    npm install
     ```
 
 3. Run application.
 
     ```bash
-    $ node .\server.js
+    node .\server.js
     ```
 
 4. Open URL http://localhost in browser.
