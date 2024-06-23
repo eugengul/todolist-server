@@ -4,7 +4,7 @@ This is a server for to-do list application with authorization and synchronizati
 
 ## Installation
 
-1. Clone a repository with submodules.
+1. Clone the repository with submodules.
 
     ```bash
     git clone --recurse-submodules https://github.com/eugengul/todolist-server.git
@@ -22,10 +22,16 @@ This is a server for to-do list application with authorization and synchronizati
     npm install
     ```
 
-3. Run application.
+3. Create a `.env` file and set the `SECRET_AUTH_KEY` variable. 
+
+    ```
+    SECRET_AUTH_KEY = "<your-secret-key>"
+    ```
+
+4. Run the application.
 
     ```bash
     node .\server.js
     ```
 
-4. Open URL http://localhost in browser.
+5. Open the following URL http://localhost in your browser.
